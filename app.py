@@ -5,7 +5,7 @@ from pydantic import BaseModel  # Validators
 
 from mangum import Mangum
 
-fast_app = FastAPI()
+app = FastAPI()
 
 model = pickle.load(open("model.pkl", "rb"))
 # The logistic regression model was used as it was determined to be the best fit based on evaluation.
@@ -17,7 +17,7 @@ class TextRequest(BaseModel):
     text: str
 
 
-@fast_app.post("/predict/")
+@app.post("/predict/")
 def predict_category(request: TextRequest):
     description = request.text.strip()
     if not description:
@@ -28,4 +28,4 @@ def predict_category(request: TextRequest):
     return {"prediction": prediction}
 
 
-handler = Mangum(fast_app)
+handler = Mangum(app)
