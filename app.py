@@ -22,7 +22,7 @@ class TicketCategoryResponse(BaseModel):
 
 @app.post("/classify-ticket/", response_model=TicketCategoryResponse)
 def predict_category(request: TextRequest):
-    description = request.text.strip()
+    description = request.ticket_query.strip()
     if not description:
         raise HTTPException(status_code=204, detail="Text cannot be empty")
     input_data = vectorizer.transform([description])
