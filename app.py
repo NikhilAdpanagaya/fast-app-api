@@ -14,10 +14,13 @@ vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
 # The text type validation
 class TextRequest(BaseModel):
-    text: str
+    ticket_query: str
+
+class TicketCategoryResponse(BaseModel):
+    category: str
 
 
-@app.post("/predict/")
+@app.post("/classify-ticket/", response_model=TicketCategoryResponse)
 def predict_category(request: TextRequest):
     description = request.text.strip()
     if not description:
@@ -25,7 +28,7 @@ def predict_category(request: TextRequest):
     input_data = vectorizer.transform([description])
     prediction = model.predict(input_data)[0]
 
-    return {"prediction": prediction}
+    return TicketCategoryResponse(category=prediction)
 
 
 handler = Mangum(app)
